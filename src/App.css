@@ -133,4 +133,20 @@
 } .chat-head > span:nth-child(1) .chater-img {
   height: 2em;
   width: 2em;
+} .ldr {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  font-size: 2em;
+} .ldr > span {
+  width: fit-content;
+  display: block;
+  animation: ldr 1.5s infinite ease-in-out;
+}
+
+@keyframes ldr {
+  to {
+    transform: rotate(360deg);
+  }
 }
