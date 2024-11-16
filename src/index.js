@@ -10,7 +10,7 @@ import { configureStore } from "@reduxjs/toolkit";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const store = configureStore({
   reducer: {
-    current: msgPing,
+    messages: msgPing,
   },
 });
 root.render(

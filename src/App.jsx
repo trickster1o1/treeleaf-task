@@ -17,17 +17,30 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useEffect, useRef, useState } from "react";
 
 function App() {
-  const msg = useSelector((state) => state.current.value);
+  const msg = useSelector((state) => state.messages.value);
   const dispatch = useDispatch();
   const [flag,setFlag] = useState(false);
   const [page, setPage] = useState(1);
+  const [loader,setLoader] = useState(true);
+  
+  const flagRef = useRef(flag);
+  const pageRef = useRef(page);
+  const msgRef = useRef([]);
+  const dummy = ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'];
   const fetchChats = async () => {
-    await fetch(`https://gorest.co.in/public/v1/users?page=${page}`)
+    await fetch(`https://gorest.co.in/public/v1/users?per_page=40&page=${pageRef.current}`)
       .then((res) => res.json())
       .then((res) => {
         dispatch(getMsg([...res.data, ...msg]));
+        msgRef.current = [...res.data,...msgRef.current];
         console.log(res.data);
-        // setFlag(false);
+        setLoader(false);
+        setTimeout(() => {
+          setFlag(false);
+          flagRef.current = false;
+        }, 5000);
+        console.log('=========== '+pageRef.current+' =========');
+
       })
       .catch((err) => console.log(err));
   };
@@ -46,33 +59,40 @@ function App() {
   function checkElementsInViewport() {
     const element = document.getElementById("ldr");
     if (isInViewport(element)) {
-      if (!flag) {
-        console.log('dekhyo');
+      console.log(flagRef.current);
+      if (!flagRef.current) {
         setFlag(true);
-        setPage(page+1);
+        setPage((currPage)=>currPage+1);
+        pageRef.current = pageRef.current + 1;
+        flagRef.current = true;
         fetchChats();
       }
 
     }
   }
+  const scrollableRef = useRef(null);
+
   useEffect(() => {
     fetchChats();
+    setTimeout(() => {  
+      let m = document.getElementById('bottom');
+      m.scrollIntoView({ behavior: "smooth" }, true);
+    }, 500);
+  }, []);
+
+
+useEffect(() => {
+    flagRef.current = flag;
+    pageRef.current = page;
+    // msgRef.current = msg;
+
     // window.addEventListener("load", checkElementsInViewport);
     // window.addEventListener("resize", checkElementsInViewport);
-    // document.getElementById('c').addEventListener("scroll", checkElementsInViewport);
+    document.getElementById('c').addEventListener("scroll", checkElementsInViewport);
     console.log("working!!!!");
-    const element = document.getElementById("ldr");
-    if (isInViewport(element)) {
-      if (!flag) {
-        console.log('dekhyo!!!!');
-        setFlag(true);
-        // setPage(page+1);
-        // fetchChats();
-      }
-
-    }
-  }, []);
-  const containerRef = useRef(null);
+    
+   
+}, [flag, page]);
 
   return (
     <div className="container">
@@ -121,22 +141,30 @@ function App() {
           </span>
         </div>
         <div className="chat-body">
-          <div className="chats" id="c" ref={containerRef}>
+          <div className="chats" id="c" ref={scrollableRef}>
             <span className="ldr" id="ldr">
               <span>
                 <BiLoaderAlt />
               </span>
             </span>
-            {msg
-              ? msg.map((e, key) => (
+            { loader ? dummy.map((e, key) => (
+                <div
+                  key={key}
+                  className={key % 2 === 0 ? "receive" : "sent"}
+                >
+                  {e}
+                </div>
+              )) : msgRef.current
+              ? msgRef.current.map((e, key) => (
                   <div
                     key={key}
                     className={e.id % 2 === 0 ? "receive" : "sent"}
                   >
-                    {e.name}
+                    {e.name} {key+1}
                   </div>
                 ))
               : null}
+              <span id="bottom"></span>
           </div>
         </div>
         <div className="chat-foot">
