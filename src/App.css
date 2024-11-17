@@ -99,6 +99,7 @@
 .chats > div {
   padding: 10px;
   border-radius: 25px;
+  max-width: 15em;
   width: fit-content;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -162,5 +163,16 @@
 @keyframes lMsg {
   to {
     opacity: .5;
+  }
+}
+
+@media only screen and (max-width: 770px) {
+  .chat-sidebar {
+    display: none;
+  } .container {
+    grid-template-columns: 1fr 10fr !important;
+  } .chat-foot input {
+    flex-shrink: 2 !important;
+    width: 100%;
   }
 }

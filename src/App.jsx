@@ -14,6 +14,7 @@ import { MdOutlineGifBox } from "react-icons/md";
 import { FaThumbsUp } from "react-icons/fa6";
 import { BiLoaderAlt } from "react-icons/bi";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { IoMdSend } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
   const [flag,setFlag] = useState(true);
   const [page, setPage] = useState(1);
   const [loader,setLoader] = useState(true);
-  
+  const [yourMsg,setYourMsg] = useState('');
+  const btmRef = useRef(null);
   const flagRef = useRef(flag);
   const pageRef = useRef(page);
   const msgRef = useRef([]);
@@ -107,6 +109,16 @@ useEffect(() => {
    
 }, [flag, page]);
 
+const sendMsg = () => {
+  dispatch(getMsg([...msg,{id: new Date().getTime(), name: yourMsg}])); 
+  msgRef.current = [...msgRef.current,{id: 1, name: yourMsg}];
+  setYourMsg('');
+  setTimeout(() => {
+    btmRef.current?.scrollIntoView({ behavior: "smooth" }, true);
+  }, 0); 
+  
+}
+
   return (
     <div className="container">
       <div className="side-bar">
@@ -123,7 +135,7 @@ useEffect(() => {
           <FaArchive />
         </div>
       </div>
-      <div>
+      <div className="chat-sidebar">
         <h2>Chats</h2>
         <div className="search-cont">
           {" "}
@@ -177,26 +189,31 @@ useEffect(() => {
                   </div>
                 ))
               : null}
-              <span id="bottom"></span>
+              <span id="bottom" ref={btmRef}></span>
           </div>
         </div>
         <div className="chat-foot">
           <span>
             <FaPlusCircle />
           </span>
-          <span>
+          <span style={yourMsg ? {display:'none'} : null}>
             <IoFileTraySharp />
           </span>
-          <span>
+          <span style={yourMsg ? {display:'none'} : null}>
             <PiStickerDuotone />
           </span>
-          <span>
+          <span style={yourMsg ? {display:'none'} : null}>
             <MdOutlineGifBox />
           </span>
-          <input type="text" />
-          <span>
+          <input type="text" value={yourMsg} onChange={(e)=>setYourMsg(e.target.value)} 
+          onKeyDown={(e) => {if (e.key === "Enter") sendMsg();}}/>
+          {
+            yourMsg ? <span role="button" title="Send" onClick={sendMsg}>
+            <IoMdSend />
+          </span> : <span>
             <FaThumbsUp />
           </span>
+          }
         </div>
       </div>
     </div>
