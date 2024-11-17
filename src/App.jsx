@@ -124,11 +124,12 @@ const [scrollBtn,setScrollBtn] = useState(false);
 const readScroll = () => {
   const childRect = btmRef.current.getBoundingClientRect();
     let sd = document.getElementById('sDown');
-     if(childRect.y > 600 && !scrollBtn) {
+    // console.log(childRect.y);
+     if(childRect.y > 900 && !scrollBtn) {
         setScrollBtn(true);
         sd.style.opacity = '1';
         sd.style.transform = 'scale(1)';
-     } else if(childRect.y < 600) {
+     } else if(childRect.y <= 900) {
         setScrollBtn(false);
         sd.style.opacity = '0';
         sd.style.transform = 'scale(0)';
