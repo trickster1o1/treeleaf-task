@@ -15,6 +15,7 @@ import { FaThumbsUp } from "react-icons/fa6";
 import { BiLoaderAlt } from "react-icons/bi";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoMdSend } from "react-icons/io";
+import { FaArrowDown } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 
 function App() {
@@ -119,6 +120,21 @@ const sendMsg = () => {
   
 }
 
+const [scrollBtn,setScrollBtn] = useState(false);
+const readScroll = () => {
+  const childRect = btmRef.current.getBoundingClientRect();
+    let sd = document.getElementById('sDown');
+     if(childRect.y > 600 && !scrollBtn) {
+        setScrollBtn(true);
+        sd.style.opacity = '1';
+        sd.style.transform = 'scale(1)';
+     } else if(childRect.y < 600) {
+        setScrollBtn(false);
+        sd.style.opacity = '0';
+        sd.style.transform = 'scale(0)';
+     }
+}
+
   return (
     <div className="container">
       <div className="side-bar">
@@ -166,7 +182,7 @@ const sendMsg = () => {
           </span>
         </div>
         <div className="chat-body">
-          <div className="chats" id="c" ref={scrollableRef}>
+          <div className="chats" id="c" ref={scrollableRef} onScroll={readScroll}>
             <span className="ldr" id="ldr">
               <span>
                 <BiLoaderAlt />
@@ -189,6 +205,7 @@ const sendMsg = () => {
                   </div>
                 ))
               : null}
+              <span className="scrollBtn" id="sDown" onClick={()=>btmRef.current?.scrollIntoView({ behavior: "smooth" }, true)}><FaArrowDown /></span>
               <span id="bottom" ref={btmRef}></span>
           </div>
         </div>

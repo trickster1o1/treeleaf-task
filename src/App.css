@@ -76,9 +76,25 @@
   flex-direction: column;
   justify-content: flex-end;
 } .chats {
+  position: relative;
   height: 82vh;
   overflow-y: auto;
   /* scroll-behavior: smooth; */
+} .scrollBtn {
+  position: fixed;
+  background-color: #4c4c4c;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.5em;
+  width: 2.5em;
+  right: 32%;
+  bottom: 5em;
+  color: #5043ff;
+  opacity: 0;
+  transform: scale(0);
+  transition: all .35s ease-in-out;
 }
 
 /* width */
