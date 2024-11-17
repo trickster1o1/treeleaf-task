@@ -78,7 +78,7 @@
 } .chats {
   height: 82vh;
   overflow-y: auto;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
 }
 
 /* width */
@@ -135,7 +135,7 @@
   height: 2em;
   width: 2em;
 } .ldr {
-  padding-top: 4em;
+  padding-top: 10em;
   display: flex;
   width: 100%;
   justify-content: center;
@@ -145,10 +145,22 @@
   width: fit-content;
   display: block;
   animation: ldr 1.5s infinite ease-in-out;
+} .l-msg {
+  background-color: #4c4c4c !important;
+  width: 15em !important;
+  height: 2em;
+  animation: lMsg 1.2s infinite ease-in-out alternate;
+  transition: all 1.2s ease-in-out;
 }
 
 @keyframes ldr {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes lMsg {
+  to {
+    opacity: .5;
   }
 }

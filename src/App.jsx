@@ -19,27 +19,44 @@ import { useEffect, useRef, useState } from "react";
 function App() {
   const msg = useSelector((state) => state.messages.value);
   const dispatch = useDispatch();
-  const [flag,setFlag] = useState(false);
+  const [flag,setFlag] = useState(true);
   const [page, setPage] = useState(1);
   const [loader,setLoader] = useState(true);
   
   const flagRef = useRef(flag);
   const pageRef = useRef(page);
   const msgRef = useRef([]);
-  const dummy = ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'];
+  const dummy = ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'];
   const fetchChats = async () => {
     await fetch(`https://gorest.co.in/public/v1/users?per_page=40&page=${pageRef.current}`)
       .then((res) => res.json())
       .then((res) => {
-        dispatch(getMsg([...res.data, ...msg]));
-        msgRef.current = [...res.data,...msgRef.current];
-        console.log(res.data);
+        if(pageRef.current > 1 && scrollableRef.current) {
+            const scrollable = scrollableRef.current;
+      
+            const previousScrollHeight = scrollable.scrollHeight;
+            const previousScrollTop = scrollable.scrollTop;
+      
+            dispatch(getMsg([...res.data, ...msg]));
+            msgRef.current = [...res.data,...msgRef.current];
+      
+            // Adjust scroll position after the update
+            setTimeout(() => {
+              const currentScrollHeight = scrollable.scrollHeight;
+              scrollable.scrollTop =
+                previousScrollTop + (currentScrollHeight - previousScrollHeight);
+            }, 0); 
+        } else {
+          dispatch(getMsg([...res.data, ...msg]));
+          msgRef.current = [...res.data,...msgRef.current];
+          console.log(res.data);
+        }
+        
         setLoader(false);
         setTimeout(() => {
           setFlag(false);
           flagRef.current = false;
-        }, 5000);
-        console.log('=========== '+pageRef.current+' =========');
+        }, 2000);
 
       })
       .catch((err) => console.log(err));
@@ -51,7 +68,7 @@ function App() {
     const viewportTop = window.scrollY;
     const viewportHalf = viewportTop + window.innerHeight / 2;
 
-    return elementBottom > viewportTop && elementTop < viewportHalf;
+    return elementBottom+550 > viewportTop && elementTop < viewportHalf;
   }
 
 
@@ -59,13 +76,13 @@ function App() {
   function checkElementsInViewport() {
     const element = document.getElementById("ldr");
     if (isInViewport(element)) {
-      console.log(flagRef.current);
       if (!flagRef.current) {
         setFlag(true);
         setPage((currPage)=>currPage+1);
         pageRef.current = pageRef.current + 1;
         flagRef.current = true;
         fetchChats();
+        console.log('tannyo');
       }
 
     }
@@ -86,11 +103,7 @@ useEffect(() => {
     pageRef.current = page;
     // msgRef.current = msg;
 
-    // window.addEventListener("load", checkElementsInViewport);
-    // window.addEventListener("resize", checkElementsInViewport);
-    document.getElementById('c').addEventListener("scroll", checkElementsInViewport);
-    console.log("working!!!!");
-    
+    document.getElementById('c').addEventListener("scroll", checkElementsInViewport);    
    
 }, [flag, page]);
 
@@ -150,17 +163,17 @@ useEffect(() => {
             { loader ? dummy.map((e, key) => (
                 <div
                   key={key}
-                  className={key % 2 === 0 ? "receive" : "sent"}
+                  className={key % 2 === 0 ? "receive l-msg" : "sent l-msg"}
                 >
-                  {e}
                 </div>
               )) : msgRef.current
               ? msgRef.current.map((e, key) => (
                   <div
+                    title={e.id}
                     key={key}
                     className={e.id % 2 === 0 ? "receive" : "sent"}
                   >
-                    {e.name} {key+1}
+                    {e.name}
                   </div>
                 ))
               : null}
