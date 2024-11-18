@@ -159,7 +159,7 @@ const readScroll = () => {
             </div>
             <div className="chater-cont">
               <span>Trealeaf</span>
-              <span>Text</span>
+              <span>{msgRef.current.length ? msgRef.current[msgRef.current.length-1].name : '...' }</span>
             </div>
           </div>
         </div>
