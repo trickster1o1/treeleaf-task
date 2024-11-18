@@ -2,20 +2,15 @@ import "./App.css";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { getMsg } from "./states/messages";
-import { BiSolidMessageRounded } from "react-icons/bi";
+import { BiSolidMessageRounded, BiSolidMessageRoundedDots,BiLoaderAlt } from "react-icons/bi";
 import { HiHomeModern } from "react-icons/hi2";
-import { BiSolidMessageRoundedDots } from "react-icons/bi";
-import { FaArchive } from "react-icons/fa";
-import { FaSearch } from "react-icons/fa";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaArchive,FaSearch,FaPlusCircle,FaArrowDown } from "react-icons/fa";
 import { IoFileTraySharp } from "react-icons/io5";
 import { PiStickerDuotone } from "react-icons/pi";
 import { MdOutlineGifBox } from "react-icons/md";
 import { FaThumbsUp } from "react-icons/fa6";
-import { BiLoaderAlt } from "react-icons/bi";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoMdSend } from "react-icons/io";
-import { FaArrowDown } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 
 function App() {
@@ -95,9 +90,8 @@ function App() {
   useEffect(() => {
     fetchChats();
     setTimeout(() => {  
-      let m = document.getElementById('bottom');
-      m.scrollIntoView({ behavior: "smooth" }, true);
-    }, 500);
+      btmRef.current.scrollIntoView({ behavior: "smooth" }, true);
+    }, 900);
   }, []);
 
 
